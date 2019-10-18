@@ -7,20 +7,51 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-      "bootstrap": "lerna bootstrap",
-      "clean": "lerna clean",
-      "build": "lerna run build",
-      "start": "lerna run start --stream"
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean",
+    "build": "lerna run build",
+    "start": "lerna run start --stream",
+    "format": "prettier --write 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js' 'packages/*/build'"
   },
   "workspaces": [
-      "packages/*"
+    "packages/*"
   ],
   "devDependencies": {
     "bluebird": "^3.7.1",
     "cli-progress": "^3.3.1",
     "dotenv": "^8.2.0",
+    "eslint": "^6.5.1",
+    "eslint-plugin-import": "^2.18.2",
+    "execa": "^3.2.0",
+    "get-port": "^5.0.0",
+    "globby": "^10.0.1",
+    "husky": "^3.0.9",
     "jest": "^24.9.0",
     "lerna": "^3.18.1",
-    "supertest": "^4.0.2"
+    "lerna-changelog": "^0.8.2",
+    "lint-staged": "^9.4.2",
+    "multimatch": "^4.0.0",
+    "prettier": "^1.18.2",
+    "strip-ansi": "^5.2.0",
+    "supertest": "^4.0.2",
+    "through2": "^3.0.1",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.4",
+    "wait-for-localhost": "^3.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,md,css,html}": [
+      "prettier --trailing-comma es5 --single-quote --write",
+      "git add"
+    ],
+    "yarn.lock": [
+      "git rm --cached"
+    ]
   }
 }
