@@ -2,6 +2,7 @@ import express, { Express } from "express"
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import morgan from "morgan"
+import compression from "compression"
 import helmet from "helmet"
 import createHttpError from "http-errors"
 import winston, { LoggerStream } from "./utils/logger"
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(bodyParser.json())
+app.use(compression())
 app.use(helmet())
 
 app.use("/", router)
