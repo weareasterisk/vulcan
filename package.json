@@ -19,6 +19,8 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-lerna-scopes": "^8.2.0",
     "@types/get-port": "^4.2.0",
     "@typescript-eslint/eslint-plugin": "^2.4.0",
     "@typescript-eslint/parser": "^2.4.0",
@@ -49,6 +51,7 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged"
     }
   },
