@@ -1,5 +1,7 @@
 import express, { Router } from "express"
+// import multer from "multer"
 import * as exampleService from "../services/example"
+import * as devpostService from "../services/devpost"
 
 const router: Router = express.Router()
 
@@ -8,6 +10,10 @@ const router: Router = express.Router()
  * Reference @file: /src/index.ts
  */
 
+// const upload = multer({})
+
 router.get("/", exampleService.getMethod)
+
+router.post("/gavel", devpostService.convertDevpostToGavelCSV)
 
 export default router

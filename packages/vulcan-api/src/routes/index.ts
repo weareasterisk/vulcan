@@ -1,8 +1,7 @@
 import express, { Router } from "express"
+import apiRouter from "./api"
 
 const router: Router = express.Router()
-
-import apiRouter from "./api"
 
 router.use("/api/v1", apiRouter)
 
