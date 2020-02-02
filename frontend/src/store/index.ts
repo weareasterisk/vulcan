@@ -1,20 +1,12 @@
-import { applyMiddleware, combineReducers, compose, createStore } from "redux"
-import saveState from "redux-localstorage"
+import { applyMiddleware, combineReducers, compose, createStore, Store } from "redux"
 import thunk from "redux-thunk"
+import { composeWithDevTools } from "redux-devtools-extension"
+import authReducer from "./authReducer"
 
-export default function configureStore(initState = {}) {
-  const reducer = combineReducers({})
+export default function configureStore(initState = {}): Store {
+  const reducer = combineReducers({ auth: authReducer })
 
-  const enhancements = [
-    applyMiddleware(thunk),
-    saveState(null, {
-      slicer: () => state => ({}),
-    }),
-  ]
-
-  if (typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION__) {
-    enhancements.push(window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
-  }
+  const enhancements = [composeWithDevTools(applyMiddleware(thunk))]
 
   return createStore(reducer, initState, compose(...enhancements))
 }
