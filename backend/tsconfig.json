@@ -65,7 +65,7 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */,
     "resolveJsonModule": true
   },
-  "include": ["src"],
+  "include": ["src", "bin"],
   "exclude": ["build", "jest", "__tests__", "node_modules", "scripts", "webpack", "types", "**/*.test.ts", "**/*.test.js"],
   "filesGlob": ["./**/*.ts", "!./build/**/*.ts", "!./node_modules/**/*.ts"],
   "lib": ["es6"]
