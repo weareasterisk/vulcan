@@ -7,17 +7,18 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "lerna": "lerna",
-    "bootstrap": "lerna bootstrap",
-    "clean": "lerna clean",
-    "build": "lerna run build",
-    "start": "lerna run start --stream",
-    "dev": "lerna run dev --stream",
+    "lerna": "npx lerna",
+    "bootstrap": "npx lerna bootstrap",
+    "clean": "npx lerna clean",
+    "build": "npx lerna run build",
+    "start": "npx lerna run start --stream",
+    "dev": "npx lerna run dev --stream",
     "lint": "eslint packages --ext .ts,.tsx,.js,.jsx",
     "lint:write": "eslint packages --fix --ext .ts,.tsx,.js,.jsx"
   },
   "workspaces": [
-    "packages/*"
+    "backend/",
+    "frontend/"
   ],
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
