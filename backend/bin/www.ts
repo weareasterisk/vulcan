@@ -2,10 +2,12 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import * as http from "http"
-import Debug from "debug"
 import app from "../src/app"
 
-const logger = Debug("app:src/app.ts")
+import winston from "../src/utils/logger"
+
+const logger = winston.info
+
 const DEFAULT_PORT = 8080
 
 /**
@@ -62,7 +64,7 @@ function onError(error: NodeJS.ErrnoException): void {
 function onListening(): void {
   const addr = server.address()
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr && addr.port}`
-  console.log(`App started and listening on ${bind}`)
+  logger(`App started and listening on ${bind}`)
 }
 
 /**
@@ -89,6 +91,6 @@ process.on("SIGINT", () => {
 
 process.on("unhandledRejection", reason => {
   logger(`Unhandled promise rejection thrown: `)
-  logger(reason)
+  logger(JSON.stringify(reason))
   process.exit(1)
 })

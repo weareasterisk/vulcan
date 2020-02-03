@@ -1,28 +1,15 @@
 import appRoot from "app-root-path"
 import winston from "winston"
 
-const options = {
-  file: {
-    level: "info",
-    filename: `${appRoot}/logs/app.log`,
-    handleExceptions: true,
-    json: true,
-    maxsize: 5242880, // 5 MB
-    maxFile: 5,
-    colorize: false,
-  },
-  console: {
-    level: "debug",
-    handleExceptions: true,
-    json: false,
-    colorize: true,
-  },
-}
-
 const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.json(),
-  ...options,
+  level: "verbose",
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: "YYYY-MM-DD HH:mm:ss",
+    }),
+    winston.format.json(),
+    winston.format.splat()
+  ),
   transports: [
     /*
      * Write logs with level `info` and above to `combined.log`
@@ -31,6 +18,18 @@ const logger = winston.createLogger({
      * */
     new winston.transports.File({ filename: "error.log", level: "error" }),
     new winston.transports.File({ filename: "combined.log" }),
+    new winston.transports.Console({
+      handleExceptions: true,
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp({
+          format: "YYYY-MM-DD HH:mm:ss",
+        }),
+        winston.format.splat(),
+        winston.format.align(),
+        winston.format.simple()
+      ),
+    }),
   ],
   exitOnError: false,
 })
