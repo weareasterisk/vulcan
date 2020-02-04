@@ -43,4 +43,7 @@ export class LoggerStream {
   }
 }
 
+/**
+ * @exports logger
+ */
 export default logger

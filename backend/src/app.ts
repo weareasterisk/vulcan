@@ -43,4 +43,7 @@ app.use((err, res, _next) => {
   res.status(err.statusCode || 500).end()
 })
 
+/**
+ * @exports Express
+ */
 export default app
