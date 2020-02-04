@@ -14,12 +14,16 @@ services:
       - MONGODB_PASSWORD=vulcan
   
   redis:
-    image: redis:5.0-alpine
+    image: bitnami/redis:5.0
     restart: on-failure
+    environment:
+      - REDIS_PASSWORD=vulcan
     ports:
       - 6379:6379
+    volumes:
+      - 'redis_data:/bitnami'
 
 volumes:
-  postgres_data: {}
   mongodb_data:
     driver: local
+  redis_data: {}
