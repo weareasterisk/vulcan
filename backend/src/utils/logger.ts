@@ -1,35 +1,56 @@
 import appRoot from "app-root-path"
 import winston from "winston"
+import stripAnsi from "strip-ansi"
+
+const stripAnsiFormatter = winston.format((info, _opts) => {
+  info.message = stripAnsi(info.message)
+  return info
+})
+
+const options = {
+  console: {
+    handleExceptions: true,
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.timestamp({
+        format: "YYYY-MM-DD HH:mm:ss",
+      }),
+      winston.format.splat(),
+      winston.format.align(),
+      winston.format.simple()
+    ),
+  },
+  file: {
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: "YYYY-MM-DD HH:mm:ss",
+      }),
+      winston.format.splat(),
+      stripAnsiFormatter(),
+      winston.format.json()
+    ),
+  },
+}
 
 const logger = winston.createLogger({
-  level: "verbose",
-  format: winston.format.combine(
-    winston.format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss",
-    }),
-    winston.format.json(),
-    winston.format.splat()
-  ),
+  defaultMeta: { service: "vulcan-service" },
   transports: [
     /*
      * Write logs with level `info` and above to `combined.log`
      *
      * Write logs with level `error` and below to `error.log`
      * */
-    new winston.transports.File({ filename: "error.log", level: "error" }),
-    new winston.transports.File({ filename: "combined.log" }),
-    new winston.transports.Console({
-      handleExceptions: true,
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.timestamp({
-          format: "YYYY-MM-DD HH:mm:ss",
-        }),
-        winston.format.splat(),
-        winston.format.align(),
-        winston.format.simple()
-      ),
+    new winston.transports.File({
+      filename: `${appRoot}/logs/error.log`,
+      level: "error",
+      ...options.file,
     }),
+    new winston.transports.File({
+      filename: `${appRoot}/logs/combined.log`,
+      level: "verbose",
+      ...options.file,
+    }),
+    new winston.transports.Console(options.console),
   ],
   exitOnError: false,
 })
