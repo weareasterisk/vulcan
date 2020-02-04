@@ -7,6 +7,6 @@ import * as devpostService from "../../services/devpost"
 
 const router: Router = express.Router()
 
-router.post("/", devpostService.convertDevpostToGavelCSV)
+router.get("/", devpostService.convertDevpostUploadToGavelConsumableData)
 
 export default router

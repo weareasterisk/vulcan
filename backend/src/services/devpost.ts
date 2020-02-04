@@ -15,8 +15,8 @@ export const convertDevpostToGavelCSV = async (req: Request, res: Response) => {
 }
 
 export const convertDevpostUploadToGavelConsumableData = [
-  upload.single("file"),
-  async (req: Request, res: Response) => {
-    const { file } = req
+  // upload.single("file"),
+  (req: Request, res: Response): void => {
+    res.status(200).json({ test: "test" })
   },
 ]
