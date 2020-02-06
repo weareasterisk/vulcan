@@ -1,5 +1,5 @@
 import express, { Router } from "express"
-import * as devpostService from "../../services/devpost"
+import * as gavel from "../../services/gavel"
 
 /**
  * Routes are prepended with /api/v1/gavel/
@@ -7,6 +7,6 @@ import * as devpostService from "../../services/devpost"
 
 const router: Router = express.Router()
 
-router.get("/", devpostService.convertDevpostUploadToGavelConsumableData)
+router.post("/ingestion/raw", gavel.conformToGavelConsumableData)
 
 export default router

@@ -8,6 +8,7 @@ import createHttpError, { HttpError } from "http-errors"
 import winston, { LoggerStream } from "./utils/logger"
 import { shouldCompress } from "./middleware/compression"
 import router from "./routes"
+import config from "./config"
 
 const app: Express = express()
 
@@ -18,7 +19,8 @@ app.use(morgan(morganJSONMatcher, { stream: new LoggerStream() }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(bodyParser.json())
+// Ensure that bodyParser accepts JSON API Spec. Will implement some day....
+app.use(bodyParser.json({ type: "application/vnd.api+json" }))
 app.use(compression({ filter: shouldCompress }))
 app.use(helmet())
 
@@ -44,12 +46,14 @@ app.use((err: HttpError, req: Request, res: Response, next: Function) => {
     return next(err)
   }
 
-  winston.error(`${err.status || 500} - ${err.message} - ${req.url} - ${req.method} - ${req.ip}`)
+  winston.error(
+    `${err.status || 500} - ${err.message} - ${req.url} - ${req.method} - ${req.ip} - ${err}`
+  )
 
   res.status(err.status || 500).json({
     status: err.status,
     message: err.message,
-    stack: err.stack,
+    stack: config.env === "development" ? err.stack : "ommited in production",
   })
 })
 
