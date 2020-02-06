@@ -1,5 +1,6 @@
+import assert from "assert"
 import { MongoClient, Db } from "mongodb"
-import { Config } from "src/config"
+import config, { Config } from "../config"
 
 const constructUrl = (
   username: string,
@@ -11,26 +12,46 @@ const constructUrl = (
   return `mongodb://${username}:${password}@${host}:${port}/${database}`
 }
 
-let client: MongoClient
-let db: Db
+export default class MongoDao {
+  public static client: MongoClient
+  public static db: Db
 
-export const connect = async (config: Config): Promise<void> => {
-  client = await MongoClient.connect(
-    constructUrl(
-      config.mongodb.username,
-      config.mongofb.password,
-      config.mongodb.host,
-      config.mongodb.port,
-      config.mongodb.database
-    )
-  )
-  db = client.db(config.mongodb.database)
-}
+  public static connect(): Promise<any> {
+    return new Promise<any>((res, rej) => {
+      MongoClient.connect(
+        constructUrl(
+          config.mongodb.username,
+          config.mongodb.password,
+          config.mongodb.host,
+          config.mongodb.port,
+          config.mongodb.database
+        ),
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        },
+        (err, client: MongoClient) => {
+          if (err) {
+            rej(err)
+          } else {
+            MongoDao.client = client
+            MongoDao.db = client.db(config.mongodb.database)
+            res(client)
+          }
+        }
+      )
+    })
+  }
 
-export const close = async (): Promise<void> => {
-  await client.close()
-}
+  public static getDb(): Db {
+    return MongoDao.db
+  }
 
-export const mongodb = (): Db => {
-  return db
+  public static getClient(): MongoClient {
+    return MongoDao.client
+  }
+
+  public static disconnect(): void {
+    MongoDao.client.close()
+  }
 }

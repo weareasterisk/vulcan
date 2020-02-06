@@ -4,7 +4,8 @@ dotenv.config()
 import * as http from "http"
 import app from "../src/app"
 
-import winston from "../src/utils/logger"
+import winston, { LoggerStream } from "../src/utils/logger"
+import mongodb from "../src/utils/mongo"
 
 const logger = winston.info
 
@@ -61,10 +62,13 @@ function onError(error: NodeJS.ErrnoException): void {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening(): void {
+async function onListening(): Promise<void> {
   const addr = server.address()
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr && addr.port}`
-  logger(`App started and listening on ${bind}`)
+
+  await mongodb.connect().then(client => {
+    logger(`App started and listening on ${bind}`)
+  })
 }
 
 /**
@@ -81,16 +85,19 @@ server.on("listening", onListening)
 
 process.on("SIGTERM", () => {
   logger("Received SIGTERM, app closing...")
+  mongodb.disconnect()
   process.exit(0)
 })
 
 process.on("SIGINT", () => {
   logger("Received SIGINT, app closing...")
+  mongodb.disconnect()
   process.exit(0)
 })
 
 process.on("unhandledRejection", reason => {
   logger(`Unhandled promise rejection thrown: `)
   logger(JSON.stringify(reason))
+  mongodb.disconnect()
   process.exit(1)
 })
